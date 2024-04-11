@@ -1,39 +1,7 @@
 import Square from "./Square";
-import { useState } from "react";
-
-const Board = ()=>{
-
-const [squares , setSqueares] = useState(Array(9).fill(null));
-const [IsNext , setIsNext] = useState(false);
 
 
-const onclickHandler = (position) =>{
-
-if(squares[position]){
-    return;
-}
-
-
-setSqueares((currentSqueares)=>{
-
-return currentSqueares.map((currentSqueares,pos)=>{
-
-if(position == pos){
-    return IsNext? "X":"O";
-}
-return currentSqueares;
-
-})
-});
-setIsNext(currentIsNext => !currentIsNext)
-
-
-};
-
-
-
-
-
+const Board = ({squares,onclickHandler})=>{
 
 const renderOnclick = (position)=>{
 
