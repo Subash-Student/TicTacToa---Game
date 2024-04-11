@@ -4,24 +4,31 @@ import { useState } from "react";
 const Board = ()=>{
 
 const [squares , setSqueares] = useState(Array(9).fill(null));
+const [IsNext , setIsNext] = useState(false);
+
 
 const onclickHandler = (position) =>{
-setSqueares(currentSqueares=>{
+
+if(squares[position]){
+    return;
+}
+
+
+setSqueares((currentSqueares)=>{
 
 return currentSqueares.map((currentSqueares,pos)=>{
 
 if(position == pos){
-    return "X";
+    return IsNext? "X":"O";
 }
 return currentSqueares;
 
 })
+});
+setIsNext(currentIsNext => !currentIsNext)
 
-})
 
-
-
-}
+};
 
 
 
