@@ -1,30 +1,32 @@
-const StatusMsg = ({winner ,IsNext , squares})=>{
+const StatusMsg = ({ winner, current }) => {
+  const noMovesLeft = current.board.every(el => el !== null);
 
-    const nextPlayer = IsNext? "X":"O";
-    const noMoveLeft = squares.every(currentSqueares => currentSqueares != null);
-
-    const renderStatusMsg =()=>{
-
-   if(winner){
-
-      return <div>Winner Is <span className={winner ? "text-green":"text-orange"}>{winner}</span></div>
-
-   }
-   if(!winner && noMoveLeft){
-  
-      return <div><span className="text-orange">X</span> And <span className="text-green">O</span> Tied</div>
-
-   }
-  if(!winner){
-      
-      return <div>Next Player Is <span className={IsNext ? "text-orange" : "text-green"}>{nextPlayer}</span></div>
-
-  }
-
-    }
-
-return <div className="status-message">{renderStatusMsg()}</div>
-
-}
+  return (
+    <div className="status-message">
+      {winner && (
+        <>
+          Winner is{' '}
+          <span className={winner === 'X' ? 'text-green' : 'text-orange'}>
+            {winner}
+          </span>
+        </>
+      )}
+      {!winner && !noMovesLeft && (
+        <>
+          Next player is{' '}
+          <span className={current.IsNext ? 'text-green' : 'text-orange'}>
+            {current.IsNext ? 'X' : 'O'}{' '}
+          </span>
+        </>
+      )}
+      {!winner && noMovesLeft && (
+        <>
+          <span className="text-green">X</span> and{' '}
+          <span className="text-orange">O</span> tied
+        </>
+      )}
+    </div>
+  );
+};
 
 export default StatusMsg;

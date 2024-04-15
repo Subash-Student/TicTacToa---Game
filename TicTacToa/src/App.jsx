@@ -3,44 +3,76 @@ import "./styles.scss";
 import { useState } from "react";
 import { calculateWinner } from "./components/winner";
 import StatusMsg from "./components/StatusMsg";
+import History from "./components/History";
+
+
+const NEW_Game = [{ board:Array(9).fill(null), IsNext:true }];
+
 
 function App(){
-   const [squares , setSqueares] = useState(Array(9).fill(null));
-   const [IsNext , setIsNext] = useState(false);
-   
 
-   const winner = calculateWinner(squares);
    
+    const[history , setHistory] = useState(NEW_Game);
+    const [currentMove , setCurrentMove] = useState(0);
+;
+   
+    const current = history[currentMove];
 
+    const { winner,winningSquares} = calculateWinner(current.board);
+
+   
    const onclickHandler = (position) =>{
    
-   if(squares[position] || winner){
+   if(current.board[position] || winner){
        return;
    }
    
    
-   setSqueares((currentSqueares)=>{
-   
-   return currentSqueares.map((currentSqueares,pos)=>{
+   setHistory( prev =>{
+      
+      const isTraversing = currentMove + 1 !== prev.length;
+      const lastGamingState = isTraversing ? prev[currentMove] : history[history.length - 1];
+
+ 
+   const newBoard = lastGamingState.board.map((currentSqueares,pos)=>{
    
    if(position == pos){
-       return IsNext? "X":"O";
+       return lastGamingState.IsNext? "X":"O";
    }
    return currentSqueares;
    
    })
-   });
-   setIsNext(currentIsNext => !currentIsNext)
+
    
+   const base = isTraversing  ? prev.slice(0, prev.indexOf(lastGamingState) + 1): prev;
+
+ return base.concat({ board: newBoard, IsNext: !lastGamingState.IsNext,
+ });
+
+   })
+ 
+   setCurrentMove(move => move + 1);
    
    };
+   
+   const moveTo = move =>{
+      setCurrentMove(move);
+   };
 
-
-
+   const onNewGame = ()=>{
+      setHistory(NEW_Game);
+      setCurrentMove(0);
+   }
+   
 return(
 <div className="app">
-   <StatusMsg winner = {winner} IsNext = {IsNext} squares={squares} />
-   <Board  squares={squares} onclickHandler={onclickHandler}/>
+   <h1>TIC <span className="text-green">TAC</span>TOE</h1>
+
+   <StatusMsg winner = {winner} current ={current}/>
+   <Board  board={current.board} onclickHandler={onclickHandler} winningSquares ={winningSquares}/>
+   <button type="button" onClick={onNewGame} className={`btn-reset ${winner ? 'active':''}`}>Start New Game</button>
+   <History history ={history} moveTo ={moveTo} currentMove ={currentMove} />
+   <div className="bg-balls" />
 </div>
 
 
